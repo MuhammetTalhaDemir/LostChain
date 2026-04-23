@@ -20,6 +20,7 @@ const Home: NextPage = () => {
   const [aciklama, setAciklama] = useState("");
   const [dogrulamaSorusu, setDogrulamaSorusu] = useState("");
   const [gizliKonum, setGizliKonum] = useState("");
+  const [iletisimBilgisi, setIletisimBilgisi] = useState(""); // Yeni state
   const [bulunduMu, setBulunduMu] = useState(false);
 
   const { writeContractAsync: writeYourContractAsync } = useScaffoldWriteContract("YourContract");
@@ -31,14 +32,20 @@ const Home: NextPage = () => {
 
   const handleEkle = async () => {
     try {
+      // Kayıp ilanında iletişim bilgisini açıklamaya ekle
+      const finalAciklama = !bulunduMu && iletisimBilgisi 
+        ? `${aciklama} (İletişim: ${iletisimBilgisi})` 
+        : aciklama;
+
       await writeYourContractAsync({
         functionName: "esyaEkle",
-        args: [esyaIsmi, aciklama, bulunduMu, dogrulamaSorusu, gizliKonum],
+        args: [esyaIsmi, finalAciklama, bulunduMu, dogrulamaSorusu, gizliKonum],
       });
       setEsyaIsmi("");
       setAciklama("");
       setDogrulamaSorusu("");
       setGizliKonum("");
+      setIletisimBilgisi("");
     } catch (e) {
       console.error(e);
     }
@@ -56,7 +63,6 @@ const Home: NextPage = () => {
         </p>
       </div>
 
-      {/* --- FORM ALANI (Hafif Gri Arka Planlı Kart) --- */}
       <div className="card w-full max-w-2xl bg-[#F8FAFC] shadow-sm border border-[#E2E8F0] rounded-[2rem] mb-16">
         <div className="card-body p-8">
           <h2 className="card-title text-xl font-bold mb-4 flex items-center gap-2 text-[#334155]">
@@ -100,6 +106,21 @@ const Home: NextPage = () => {
               </button>
             </div>
 
+            {/* SADECE EŞYAM KAYIP SEÇİLİRSE */}
+            {!bulunduMu && (
+              <div className="flex flex-col gap-3 p-5 bg-red-50/30 rounded-2xl border border-red-100 animate-in slide-in-from-top-4 duration-300">
+                <p className="text-[10px] font-bold text-red-600 uppercase tracking-widest text-center">İletişim Bilgisi (Gerekli)</p>
+                <input
+                  type="text"
+                  placeholder="Bulan kişi size nasıl ulaşsın? (TG, Tel vb.)"
+                  className="input input-sm bg-white border-red-200 focus:ring-1 focus:ring-red-400"
+                  value={iletisimBilgisi}
+                  onChange={e => setIletisimBilgisi(e.target.value)}
+                />
+              </div>
+            )}
+
+            {/* SADECE EŞYA BULDUM SEÇİLİRSE */}
             {bulunduMu && (
               <div className="flex flex-col gap-3 p-5 bg-white rounded-2xl border border-blue-100 animate-in slide-in-from-top-4 duration-300">
                 <input
@@ -129,7 +150,6 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      {/* --- İLANLAR --- */}
       <div className="w-full max-w-7xl pb-20">
         <div className="flex items-center gap-4 mb-10 px-4">
           <div className="h-[1px] grow bg-[#E2E8F0]" />
@@ -186,15 +206,15 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
         </div>
 
         <h3 className="text-xl font-bold text-[#1E293B] mb-2">{isim}</h3>
-        <p className="text-sm text-[#64748B] mb-6 line-clamp-2">&quot;{aciklama}&quot;</p>
+        <p className="text-sm text-[#64748B] mb-6 line-clamp-3 font-medium">&quot;{aciklama}&quot;</p>
 
         {isBulundu && !isSahibi && !isOnayli && (
-          <div className="bg-white p-5 rounded-2xl border border-gray-100 mb-6">
+          <div className="bg-white p-5 rounded-2xl border border-gray-100 mb-6 shadow-sm">
             <p className="text-[11px] font-black text-blue-600 uppercase mb-3 flex items-center gap-1">
               <PaperAirplaneIcon className="h-3 w-3" /> Sahiplik Talebi
             </p>
-            <p className="text-[11px] text-gray-500 mb-3">
-              Soru: <b>{dogrulamaSorusu}</b>
+            <p className="text-[11px] text-gray-500 mb-3 font-semibold">
+              Soru: <span className="text-slate-800">{dogrulamaSorusu}</span>
             </p>
             <input
               type="text"
@@ -211,7 +231,7 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
               onChange={e => setIletisim(e.target.value)}
             />
             <button
-              className="btn btn-xs w-full bg-blue-600 text-white border-none hover:bg-blue-700"
+              className="btn btn-xs w-full bg-blue-600 text-white border-none hover:bg-blue-700 font-bold"
               onClick={() => writeYourContractAsync({ functionName: "talepOlustur", args: [BigInt(id), cevap, iletisim] })}
             >
               Talep Gönder
@@ -222,11 +242,11 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
         <div className="space-y-4">
           <div
             className={`p-4 rounded-2xl flex items-center gap-4 transition-colors ${
-              isOnayli || isSahibi ? "bg-green-50 border border-green-100" : "bg-white border border-gray-100"
+              isOnayli || isSahibi ? "bg-green-50 border border-green-100" : "bg-white border border-gray-100 shadow-sm"
             }`}
           >
             <div
-              className={`p-2 rounded-lg ${isOnayli || isSahibi ? "bg-white text-green-500" : "bg-[#F8FAFC] text-gray-300"}`}
+              className={`p-2 rounded-lg ${isOnayli || isSahibi ? "bg-white text-green-500 shadow-sm" : "bg-[#F8FAFC] text-gray-300"}`}
             >
               {isOnayli || isSahibi ? <LockOpenIcon className="h-5 w-5" /> : <LockClosedIcon className="h-5 w-5" />}
             </div>
@@ -245,7 +265,7 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
 
           {isSahibi && Number(durum) !== 2 && (
             <button
-              className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-lg"
               onClick={() => writeYourContractAsync({ functionName: "teslimEdildiIsaretle", args: [BigInt(id)] })}
             >
               <CheckIcon className="h-4 w-4" /> Süreci Kapat
