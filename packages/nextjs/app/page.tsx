@@ -1,11 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
-import { PlusIcon, ArchiveBoxIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { ArchiveBoxIcon, CheckIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Address } from "@scaffold-ui/components";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
-import { useState } from "react";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
@@ -94,13 +94,21 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
   });
   const { writeContractAsync: writeYourContractAsync } = useScaffoldWriteContract("YourContract");
 
-  if (!esya) return <div className="p-20 bg-base-200 animate-pulse rounded-3xl"></div>;
-  const [esyaId, isim, aciklama, bildiren, durum, bulanKisi, iletisimNotu] = esya;
+  if (!esya) return <div className="p-20 bg-base-200 animate-pulse rounded-3xl" />;
+  const [, isim, aciklama, bildiren, durum, bulanKisi, iletisimNotu] = esya;
 
   return (
-    <div className={`bg-base-100 p-6 rounded-3xl shadow-lg border-2 ${durum === 2 ? "opacity-50 grayscale" : "border-primary"}`}>
+    <div
+      className={`bg-base-100 p-6 rounded-3xl shadow-lg border-2 ${
+        durum === 2 ? "opacity-50 grayscale" : "border-primary"
+      }`}
+    >
       <div className="flex justify-between mb-4">
-        <span className={`badge font-bold p-3 ${durum === 0 ? "badge-error" : durum === 1 ? "badge-warning" : "badge-success"}`}>
+        <span
+          className={`badge font-bold p-3 ${
+            durum === 0 ? "badge-error" : durum === 1 ? "badge-warning" : "badge-success"
+          }`}
+        >
           {durum === 0 ? "KAYIP" : durum === 1 ? "BULUNDU" : "TESLİM EDİLDİ"}
         </span>
         <span className="text-xs opacity-50 font-mono">ID: {id}</span>
@@ -119,7 +127,9 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
           />
           <button
             className="btn btn-warning btn-sm"
-            onClick={() => writeYourContractAsync({ functionName: "bulundugunuBildir", args: [BigInt(id), bulunduNotu] })}
+            onClick={() =>
+              writeYourContractAsync({ functionName: "bulundugunuBildir", args: [BigInt(id), bulunduNotu] })
+            }
           >
             Bulduğumu Bildir
           </button>
