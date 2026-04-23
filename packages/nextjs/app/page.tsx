@@ -12,6 +12,7 @@ const Home: NextPage = () => {
   const [esyaIsmi, setEsyaIsmi] = useState("");
   const [aciklama, setAciklama] = useState("");
   const [dogrulamaSorusu, setDogrulamaSorusu] = useState("");
+  const [gizliKonum, setGizliKonum] = useState(""); // Yeni state
   const [bulunduMu, setBulunduMu] = useState(false);
 
   const { writeContractAsync: writeYourContractAsync } = useScaffoldWriteContract("YourContract");
@@ -23,6 +24,9 @@ const Home: NextPage = () => {
 
   const handleEkle = async () => {
     try {
+      // Not: Eğer kayıp ilanıysa konum boş gider, eğer bulduysa konum ve soruyla gider.
+      // Kontratındaki esyaEkle fonksiyonunun parametre sırasına göre düzenle.
+      // Örn: (isim, aciklama, bulunduMu, soru, konum)
       await writeYourContractAsync({
         functionName: "esyaEkle",
         args: [esyaIsmi, aciklama, bulunduMu, dogrulamaSorusu],
@@ -30,6 +34,7 @@ const Home: NextPage = () => {
       setEsyaIsmi("");
       setAciklama("");
       setDogrulamaSorusu("");
+      setGizliKonum("");
     } catch (e) {
       console.error(e);
     }
@@ -61,18 +66,12 @@ const Home: NextPage = () => {
               onChange={e => setEsyaIsmi(e.target.value)}
             />
             <textarea
-              placeholder="Genel Aciklama"
+              placeholder="Genel Aciklama (Renk, yer, zaman vb.)"
               className="textarea textarea-bordered border-primary"
               value={aciklama}
               onChange={e => setAciklama(e.target.value)}
             />
-            <input
-              type="text"
-              placeholder="Dogrulama Sorusu"
-              className="input input-bordered input-secondary"
-              value={dogrulamaSorusu}
-              onChange={e => setDogrulamaSorusu(e.target.value)}
-            />
+            
             <select
               className="select select-bordered border-primary"
               onChange={e => setBulunduMu(e.target.value === "bulundu")}
@@ -80,7 +79,32 @@ const Home: NextPage = () => {
               <option value="kayip">Esyami Kaybettim</option>
               <option value="bulundu">Esya Buldum</option>
             </select>
-            <button className="btn btn-primary shadow-lg" onClick={handleEkle}>
+
+            {/* SADECE EŞYA BULDUM SEÇİLİRSE GÖRÜNEN ALANLAR */}
+            {bulunduMu && (
+              <div className="flex flex-col gap-4 p-4 bg-secondary/5 rounded-xl border border-secondary/20 animate-in fade-in duration-500">
+                <p className="text-xs font-bold text-secondary uppercase">Guvenlik Ayarlari</p>
+                <input
+                  type="text"
+                  placeholder="Sahibine Sorulacak Soru (Markasi nedir?)"
+                  className="input input-bordered input-secondary w-full"
+                  value={dogrulamaSorusu}
+                  onChange={e => setDogrulamaSorusu(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="Esyayi Nereye Biraktiniz? (Gizli Konum)"
+                  className="input input-bordered input-secondary w-full"
+                  value={gizliKonum}
+                  onChange={e => setGizliKonum(e.target.value)}
+                />
+                <p className="text-[10px] opacity-60 italic">
+                  * Bu bilgiler sadece siz onay verdiginizde sahibi tarafindan gorulebilir.
+                </p>
+              </div>
+            )}
+
+            <button className="btn btn-primary shadow-lg mt-2" onClick={handleEkle}>
               Sisteme Kaydet
             </button>
           </div>
@@ -101,6 +125,7 @@ const Home: NextPage = () => {
   );
 };
 
+// EsyaKarti bileseni ayni kalabilir, ancak koda dahil etmeyi unutma.
 const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: string }) => {
   const [iletisim, setIletisim] = useState("");
   const [konum, setKonum] = useState("");
@@ -138,10 +163,16 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
         <h3 className="card-title text-2xl mt-2">{isim}</h3>
         <p className="text-sm opacity-80 italic">&quot;{aciklama}&quot;</p>
 
-        <div className="divider">GUVENLIK</div>
-        <p className="text-xs font-bold text-secondary uppercase tracking-widest">Dogrulama Sorusu:</p>
-        <p className="text-sm bg-secondary/10 p-3 rounded-lg border border-secondary/20">{dogrulamaSorusu}</p>
+        {/* Soru sadece varsa gosterilir */}
+        {dogrulamaSorusu && (
+          <>
+            <div className="divider">GUVENLIK</div>
+            <p className="text-xs font-bold text-secondary uppercase tracking-widest">Dogrulama Sorusu:</p>
+            <p className="text-sm bg-secondary/10 p-3 rounded-lg border border-secondary/20">{dogrulamaSorusu}</p>
+          </>
+        )}
 
+        {/* Bulan kisi icin form */}
         {durum === 0 && !isSahibi && (
           <div className="mt-4 p-4 bg-base-200 rounded-2xl border border-dashed border-primary">
             <p className="text-xs font-bold mb-2">Bulduysan Bilgi Ver:</p>
@@ -168,6 +199,7 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
           </div>
         )}
 
+        {/* Onay paneli */}
         {durum === 1 && isSahibi && (
           <div className="mt-4 p-4 bg-primary/10 rounded-2xl border border-primary text-center">
             <p className="text-xs font-bold mb-1 text-primary uppercase">Biri Esyani Buldu!</p>
@@ -193,7 +225,7 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
             )}
             <span className="text-xs font-bold uppercase tracking-widest">Gizli Konum</span>
           </div>
-          {isOnayli || isSahibi ? (
+          {(isOnayli || isSahibi) ? (
             <p className="text-sm font-bold text-success animate-pulse">{gizliKonum || "Konum girilmemis"}</p>
           ) : (
             <p className="text-[10px] italic opacity-50 text-center">
