@@ -21,16 +21,22 @@ contract YourContract {
     uint256 public sonrakiId;
 
     // Eşya eklerken doğrulama sorusu da ekleniyor
-    function esyaEkle(string memory _isim, string memory _aciklama, bool _bulunduMu, string memory _soru) public {
+    function esyaEkle(
+        string memory _isim, 
+        string memory _aciklama, 
+        bool _bulunduMu, 
+        string memory _soru, 
+        string memory _konum // <--- 5. parametre eklendi mi?
+    ) public {
         esyalar[sonrakiId] = Esya({
             id: sonrakiId,
             isim: _isim,
             aciklama: _aciklama,
             bildiren: msg.sender,
             durum: _bulunduMu ? Status.Bulundu : Status.Kayip,
-            bulanKisi: address(0),
+            bulanKisi: _bulunduMu ? msg.sender : address(0), // Bulan kişi ilanı açansa kendini kaydeder
             iletisimNotu: "",
-            gizliKonum: "",
+            gizliKonum: _konum,
             dogrulamaSorusu: _soru,
             onayliKisi: address(0)
         });
