@@ -52,7 +52,7 @@ const Home: NextPage = () => {
       <div className="text-center mb-10">
         <h1 className="text-6xl font-black mb-2 text-[#0F172A] tracking-tighter">LostChain</h1>
         <p className="text-lg font-medium text-[#64748B] tracking-wide">
-          Erciyes Üniversitesi Şeffaf Kayıp Eşya Portalı
+          Erciyes Üniversitesi Kayıp Eşya Portalı
         </p>
       </div>
 
