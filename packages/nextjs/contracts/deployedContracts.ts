@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   10143: {
     YourContract: {
-      address: "0x8FE60B0793A56E5AC6A3c6A4231C19F8d59B9151",
+      address: "0x60c646C21D8554eCF5DFc4a1B4e24BE81369906b",
       abi: [
         {
           inputs: [
@@ -18,7 +18,12 @@ const deployedContracts = {
             },
             {
               internalType: "string",
-              name: "_not",
+              name: "_iletisim",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_konum",
               type: "string",
             },
           ],
@@ -43,6 +48,11 @@ const deployedContracts = {
               internalType: "bool",
               name: "_bulunduMu",
               type: "bool",
+            },
+            {
+              internalType: "string",
+              name: "_soru",
+              type: "string",
             },
           ],
           name: "esyaEkle",
@@ -95,8 +105,41 @@ const deployedContracts = {
               name: "iletisimNotu",
               type: "string",
             },
+            {
+              internalType: "string",
+              name: "gizliKonum",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "dogrulamaSorusu",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "onayliKisi",
+              type: "address",
+            },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_id",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "_onaylanacakKisi",
+              type: "address",
+            },
+          ],
+          name: "kisiOnayla",
+          outputs: [],
+          stateMutability: "nonpayable",
           type: "function",
         },
         {
@@ -127,7 +170,7 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 27277848,
+      deployedOnBlock: 27290642,
     },
   },
   31337: {

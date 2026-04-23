@@ -10,14 +10,18 @@ contract YourContract {
         string aciklama;
         address bildiren;
         Status durum;
-        address bulanKisi; // Eşyayı bulduğunu iddia eden kişi
-        string iletisimNotu; // Bulan kişinin bıraktığı not veya iletişim bilgisi
+        address bulanKisi;
+        string iletisimNotu; 
+        string gizliKonum;   // Sadece onaylı kişi görecek
+        string dogrulamaSorusu; // Sahibi tarafından sorulan soru
+        address onayliKisi;  // Konumu görme yetkisi olan kişi
     }
 
     mapping(uint256 => Esya) public esyalar;
     uint256 public sonrakiId;
 
-    function esyaEkle(string memory _isim, string memory _aciklama, bool _bulunduMu) public {
+    // Eşya eklerken doğrulama sorusu da ekleniyor
+    function esyaEkle(string memory _isim, string memory _aciklama, bool _bulunduMu, string memory _soru) public {
         esyalar[sonrakiId] = Esya({
             id: sonrakiId,
             isim: _isim,
@@ -25,22 +29,31 @@ contract YourContract {
             bildiren: msg.sender,
             durum: _bulunduMu ? Status.Bulundu : Status.Kayip,
             bulanKisi: address(0),
-            iletisimNotu: ""
+            iletisimNotu: "",
+            gizliKonum: "",
+            dogrulamaSorusu: _soru,
+            onayliKisi: address(0)
         });
         sonrakiId++;
     }
 
-    // Birisi "Kayip" ilanı verilmiş bir eşyayı bulursa bu fonksiyonu çağırır
-    function buldugunuBildir(uint256 _id, string memory _not) public {
-        require(esyalar[_id].durum == Status.Kayip, "Bu esya zaten bulunmus veya teslim edilmis.");
-        esyalar[_id].durum = Status.Bulundu;
+    // Birisi eşyayı bulduğunu iddia ederse
+    function buldugunuBildir(uint256 _id, string memory _iletisim, string memory _konum) public {
+        require(esyalar[_id].durum == Status.Kayip, "Bu esya zaten bulundu.");
         esyalar[_id].bulanKisi = msg.sender;
-        esyalar[_id].iletisimNotu = _not;
+        esyalar[_id].iletisimNotu = _iletisim;
+        esyalar[_id].gizliKonum = _konum;
+        esyalar[_id].durum = Status.Bulundu;
     }
 
-    // Eşya sahibi eşyayı teslim aldığında sistemi kapatır
+    // İlan sahibi, bulan kişiyi doğrularsa yetki verir
+    function kisiOnayla(uint256 _id, address _onaylanacakKisi) public {
+        require(msg.sender == esyalar[_id].bildiren, "Sadece sahibi onaylayabilir.");
+        esyalar[_id].onayliKisi = _onaylanacakKisi;
+    }
+
     function teslimEdildiIsaretle(uint256 _id) public {
-        require(msg.sender == esyalar[_id].bildiren, "Sadece ilani veren kisi onaylayabilir.");
+        require(msg.sender == esyalar[_id].bildiren, "Sadece sahibi kapatabilir.");
         esyalar[_id].durum = Status.TeslimEdildi;
     }
 }
