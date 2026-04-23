@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/YourContract.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.30;\n\ncontract YourContract {\n    enum Status { Kayip, Bulundu, TeslimEdildi }\n\n    struct Esya {\n        uint256 id;\n        string isim;\n        string aciklama;\n        address bildiren;\n        Status durum;\n        address bulanKisi; // Eşyayı bulduğunu iddia eden kişi\n        string iletisimNotu; // Bulan kişinin bıraktığı not veya iletişim bilgisi\n    }\n\n    mapping(uint256 => Esya) public esyalar;\n    uint256 public sonrakiId;\n\n    function esyaEkle(string memory _isim, string memory _aciklama, bool _bulunduMu) public {\n        esyalar[sonrakiId] = Esya({\n            id: sonrakiId,\n            isim: _isim,\n            aciklama: _aciklama,\n            bildiren: msg.sender,\n            durum: _bulunduMu ? Status.Bulundu : Status.Kayip,\n            bulanKisi: address(0),\n            iletisimNotu: \"\"\n        });\n        sonrakiId++;\n    }\n\n    // Birisi \"Kayip\" ilanı verilmiş bir eşyayı bulursa bu fonksiyonu çağırır\n    function buldugunuBildir(uint256 _id, string memory _not) public {\n        require(esyalar[_id].durum == Status.Kayip, \"Bu esya zaten bulunmus veya teslim edilmis.\");\n        esyalar[_id].durum = Status.Bulundu;\n        esyalar[_id].bulanKisi = msg.sender;\n        esyalar[_id].iletisimNotu = _not;\n    }\n\n    // Eşya sahibi eşyayı teslim aldığında sistemi kapatır\n    function teslimEdildiIsaretle(uint256 _id) public {\n        require(msg.sender == esyalar[_id].bildiren, \"Sadece ilani veren kisi onaylayabilir.\");\n        esyalar[_id].durum = Status.TeslimEdildi;\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

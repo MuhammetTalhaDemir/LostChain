@@ -4,6 +4,229 @@
  */
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
-const deployedContracts = {} as const;
+const deployedContracts = {
+  10143: {
+    YourContract: {
+      address: "0x8FE60B0793A56E5AC6A3c6A4231C19F8d59B9151",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_id",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "_not",
+              type: "string",
+            },
+          ],
+          name: "buldugunuBildir",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_isim",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_aciklama",
+              type: "string",
+            },
+            {
+              internalType: "bool",
+              name: "_bulunduMu",
+              type: "bool",
+            },
+          ],
+          name: "esyaEkle",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "esyalar",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "isim",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "aciklama",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "bildiren",
+              type: "address",
+            },
+            {
+              internalType: "enum YourContract.Status",
+              name: "durum",
+              type: "uint8",
+            },
+            {
+              internalType: "address",
+              name: "bulanKisi",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "iletisimNotu",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "sonrakiId",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_id",
+              type: "uint256",
+            },
+          ],
+          name: "teslimEdildiIsaretle",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 27277848,
+    },
+  },
+  31337: {
+    YourContract: {
+      address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_isim",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_aciklama",
+              type: "string",
+            },
+            {
+              internalType: "bool",
+              name: "_bulunduMu",
+              type: "bool",
+            },
+          ],
+          name: "esyaEkle",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "esyalar",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "isim",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "aciklama",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "bildiren",
+              type: "address",
+            },
+            {
+              internalType: "enum YourContract.Status",
+              name: "durum",
+              type: "uint8",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "sonrakiId",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_id",
+              type: "uint256",
+            },
+          ],
+          name: "teslimEdildiIsaretle",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 6,
+    },
+  },
+} as const;
 
 export default deployedContracts satisfies GenericContractsDeclaration;
