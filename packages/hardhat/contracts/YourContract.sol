@@ -56,4 +56,14 @@ contract YourContract {
         require(msg.sender == esyalar[_id].bildiren, "Sadece sahibi kapatabilir.");
         esyalar[_id].durum = Status.TeslimEdildi;
     }
+
+            // ... mevcut struct ve enumlar ...
+
+    function talepOlustur(uint256 _id, string memory _cevap, string memory _iletisim) public {
+        require(esyalar[_id].durum == Status.Bulundu, "Bu esya icin talep olusturulamaz.");
+        // Biz burada 'bulanKisi' ve 'iletisimNotu' alanlarini 
+        // gecici olarak talep eden kisinin bilgileriyle guncelliyoruz ki sahibi gorsun.
+        esyalar[_id].bulanKisi = msg.sender;
+        esyalar[_id].iletisimNotu = string(abi.encodePacked("CEVAP: ", _cevap, " | ILETISIM: ", _iletisim));
+    }
 }
