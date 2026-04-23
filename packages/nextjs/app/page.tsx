@@ -128,7 +128,7 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
           <button
             className="btn btn-warning btn-sm"
             onClick={() =>
-              writeYourContractAsync({ functionName: "bulundugunuBildir", args: [BigInt(id), bulunduNotu] })
+              writeYourContractAsync({ functionName: "buldugunuBildir", args: [BigInt(id), bulunduNotu] })
             }
           >
             Bulduğumu Bildir
