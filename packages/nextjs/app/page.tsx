@@ -35,7 +35,10 @@ const Home: NextPage = () => {
         functionName: "esyaEkle",
         args: [esyaIsmi, aciklama, bulunduMu, dogrulamaSorusu, gizliKonum],
       });
-      setEsyaIsmi(""); setAciklama(""); setDogrulamaSorusu(""); setGizliKonum("");
+      setEsyaIsmi("");
+      setAciklama("");
+      setDogrulamaSorusu("");
+      setGizliKonum("");
     } catch (e) {
       console.error(e);
     }
@@ -53,7 +56,6 @@ const Home: NextPage = () => {
         </p>
       </div>
 
-      {/* --- YENİ MODERN FORM --- */}
       <div className="card w-full max-w-2xl bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-[#E2E8F0] rounded-[2rem] mb-16">
         <div className="card-body p-8">
           <h2 className="card-title text-xl font-bold mb-4 flex items-center gap-2 text-[#334155]">
@@ -73,20 +75,28 @@ const Home: NextPage = () => {
               value={aciklama}
               onChange={e => setAciklama(e.target.value)}
             />
-            
+
             <div className="flex gap-2">
-                <button 
-                    onClick={() => setBulunduMu(false)}
-                    className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${!bulunduMu ? 'bg-red-50 text-red-600 border-2 border-red-100' : 'bg-white text-gray-400 border-2 border-gray-50'}`}
-                >
-                    Eşyam Kayıp
-                </button>
-                <button 
-                    onClick={() => setBulunduMu(true)}
-                    className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${bulunduMu ? 'bg-green-50 text-green-600 border-2 border-green-100' : 'bg-white text-gray-400 border-2 border-gray-50'}`}
-                >
-                    Eşya Buldum
-                </button>
+              <button
+                onClick={() => setBulunduMu(false)}
+                className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${
+                  !bulunduMu
+                    ? "bg-red-50 text-red-600 border-2 border-red-100"
+                    : "bg-white text-gray-400 border-2 border-gray-50"
+                }`}
+              >
+                Eşyam Kayıp
+              </button>
+              <button
+                onClick={() => setBulunduMu(true)}
+                className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${
+                  bulunduMu
+                    ? "bg-green-50 text-green-600 border-2 border-green-100"
+                    : "bg-white text-gray-400 border-2 border-gray-50"
+                }`}
+              >
+                Eşya Buldum
+              </button>
             </div>
 
             {bulunduMu && (
@@ -108,23 +118,25 @@ const Home: NextPage = () => {
               </div>
             )}
 
-            <button className="btn btn-primary bg-blue-600 hover:bg-blue-700 border-none text-white font-bold rounded-xl mt-4 shadow-lg shadow-blue-200" onClick={handleEkle}>
+            <button
+              className="btn btn-primary bg-blue-600 hover:bg-blue-700 border-none text-white font-bold rounded-xl mt-4 shadow-lg shadow-blue-200"
+              onClick={handleEkle}
+            >
               İlanı Yayınla
             </button>
           </div>
         </div>
       </div>
 
-      {/* --- İLANLAR --- */}
       <div className="w-full max-w-7xl pb-20">
         <div className="flex items-center gap-4 mb-10 px-4">
-            <div className="h-[1px] grow bg-[#E2E8F0]"></div>
-            <h2 className="text-2xl font-black text-[#475569] flex items-center gap-2">
-                <ArchiveBoxIcon className="h-6 w-6" /> AKTİF İLANLAR
-            </h2>
-            <div className="h-[1px] grow bg-[#E2E8F0]"></div>
+          <div className="h-[1px] grow bg-[#E2E8F0]" />
+          <h2 className="text-2xl font-black text-[#475569] flex items-center gap-2">
+            <ArchiveBoxIcon className="h-6 w-6" /> AKTİF İLANLAR
+          </h2>
+          <div className="h-[1px] grow bg-[#E2E8F0]" />
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {esyalarDizisi.map(id => (
             <EsyaKarti key={id} id={id} connectedAddress={connectedAddress} />
@@ -138,12 +150,15 @@ const Home: NextPage = () => {
 const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: string }) => {
   const [cevap, setCevap] = useState("");
   const [iletisim, setIletisim] = useState("");
-  const [konum, setKonum] = useState("");
-  const { data: esya } = useScaffoldReadContract({ contractName: "YourContract", functionName: "esyalar", args: [BigInt(id)] });
+  const { data: esya } = useScaffoldReadContract({
+    contractName: "YourContract",
+    functionName: "esyalar",
+    args: [BigInt(id)],
+  });
   const { writeContractAsync: writeYourContractAsync } = useScaffoldWriteContract("YourContract");
 
   if (!esya) return <div className="h-80 bg-white rounded-[2rem] animate-pulse border border-gray-100" />;
-  const [, isim, aciklama, bildiren, durum, bulanKisi, iletisimNotu, gizliKonum, dogrulamaSorusu, onayliKisi] = esya;
+  const [, isim, aciklama, bildiren, durum, , , gizliKonum, dogrulamaSorusu, onayliKisi] = esya;
 
   const isSahibi = connectedAddress?.toLowerCase() === bildiren.toLowerCase();
   const isOnayli = connectedAddress?.toLowerCase() === onayliKisi?.toLowerCase();
@@ -151,10 +166,18 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
   const isKayip = Number(durum) === 0;
 
   return (
-    <div className={`group bg-white rounded-[2rem] border border-[#E2E8F0] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden ${Number(durum) === 2 ? 'grayscale opacity-60' : ''}`}>
+    <div
+      className={`group bg-white rounded-[2rem] border border-[#E2E8F0] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden ${
+        Number(durum) === 2 ? "grayscale opacity-60" : ""
+      }`}
+    >
       <div className="p-7">
         <div className="flex justify-between items-center mb-5">
-          <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${isKayip ? 'bg-red-100 text-red-600' : isBulundu ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'}`}>
+          <span
+            className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+              isKayip ? "bg-red-100 text-red-600" : isBulundu ? "bg-amber-100 text-amber-600" : "bg-green-100 text-green-600"
+            }`}
+          >
             {isKayip ? "Kayıp" : isBulundu ? "Bulundu" : "Teslim Edildi"}
           </span>
           <span className="text-[10px] font-bold text-gray-300">#00{id}</span>
@@ -166,38 +189,66 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
         {isBulundu && !isSahibi && !isOnayli && (
           <div className="bg-[#F8FAFC] p-5 rounded-2xl border border-gray-100 mb-6">
             <p className="text-[11px] font-black text-blue-600 uppercase mb-3 flex items-center gap-1">
-                <PaperAirplaneIcon className="h-3 w-3" /> Sahiplik Talebi
+              <PaperAirplaneIcon className="h-3 w-3" /> Sahiplik Talebi
             </p>
-            <p className="text-[11px] text-gray-500 mb-3">Soru: <b>{dogrulamaSorusu}</b></p>
-            <input type="text" placeholder="Cevabınız" className="input input-xs w-full mb-2 bg-white" value={cevap} onChange={e => setCevap(e.target.value)} />
-            <input type="text" placeholder="İletişim Adresiniz" className="input input-xs w-full mb-3 bg-white" value={iletisim} onChange={e => setIletisim(e.target.value)} />
-            <button className="btn btn-xs w-full bg-blue-600 text-white border-none hover:bg-blue-700" onClick={() => writeYourContractAsync({ functionName: "talepOlustur", args: [BigInt(id), cevap, iletisim] })}>Talep Gönder</button>
+            <p className="text-[11px] text-gray-500 mb-3">
+              Soru: <b>{dogrulamaSorusu}</b>
+            </p>
+            <input
+              type="text"
+              placeholder="Cevabınız"
+              className="input input-xs w-full mb-2 bg-white"
+              value={cevap}
+              onChange={e => setCevap(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="İletişim Adresiniz"
+              className="input input-xs w-full mb-3 bg-white"
+              value={iletisim}
+              onChange={e => setIletisim(e.target.value)}
+            />
+            <button
+              className="btn btn-xs w-full bg-blue-600 text-white border-none hover:bg-blue-700"
+              onClick={() => writeYourContractAsync({ functionName: "talepOlustur", args: [BigInt(id), cevap, iletisim] })}
+            >
+              Talep Gönder
+            </button>
           </div>
         )}
 
         <div className="space-y-4">
-            <div className={`p-4 rounded-2xl flex items-center gap-4 transition-colors ${isOnayli || isSahibi ? 'bg-green-50 border border-green-100' : 'bg-gray-50 border border-gray-100'}`}>
-                <div className={`p-2 rounded-lg ${isOnayli || isSahibi ? 'bg-white text-green-500' : 'bg-white text-gray-300'}`}>
-                    {isOnayli || isSahibi ? <LockOpenIcon className="h-5 w-5" /> : <LockClosedIcon className="h-5 w-5" />}
-                </div>
-                <div>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase">Gizli Konum</p>
-                    <p className="text-sm font-bold text-[#334155]">
-                        {isOnayli || isSahibi ? (gizliKonum || "Konum Bekleniyor") : "••••••••••••"}
-                    </p>
-                </div>
+          <div
+            className={`p-4 rounded-2xl flex items-center gap-4 transition-colors ${
+              isOnayli || isSahibi ? "bg-green-50 border border-green-100" : "bg-gray-50 border border-gray-100"
+            }`}
+          >
+            <div
+              className={`p-2 rounded-lg ${isOnayli || isSahibi ? "bg-white text-green-500" : "bg-white text-gray-300"}`}
+            >
+              {isOnayli || isSahibi ? <LockOpenIcon className="h-5 w-5" /> : <LockClosedIcon className="h-5 w-5" />}
             </div>
-
-            <div className="pt-4 border-t border-gray-50">
-                <p className="text-[10px] font-bold text-gray-400 uppercase mb-2">İlan Sahibi</p>
-                <Address address={bildiren} />
+            <div>
+              <p className="text-[10px] font-bold text-gray-400 uppercase">Gizli Konum</p>
+              <p className="text-sm font-bold text-[#334155]">
+                {isOnayli || isSahibi ? gizliKonum || "Konum Bekleniyor" : "••••••••••••"}
+              </p>
             </div>
+          </div>
 
-            {isSahibi && Number(durum) !== 2 && (
-                <button className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center justify-center gap-2" onClick={() => writeYourContractAsync({ functionName: "teslimEdildiIsaretle", args: [BigInt(id)] })}>
-                    <CheckIcon className="h-4 w-4" /> Süreci Kapat
-                </button>
-            )}
+          <div className="pt-4 border-t border-gray-50">
+            <p className="text-[10px] font-bold text-gray-400 uppercase mb-2">İlan Sahibi</p>
+            <Address address={bildiren} />
+          </div>
+
+          {isSahibi && Number(durum) !== 2 && (
+            <button
+              className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
+              onClick={() => writeYourContractAsync({ functionName: "teslimEdildiIsaretle", args: [BigInt(id)] })}
+            >
+              <CheckIcon className="h-4 w-4" /> Süreci Kapat
+            </button>
+          )}
         </div>
       </div>
     </div>
