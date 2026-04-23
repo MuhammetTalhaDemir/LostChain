@@ -48,7 +48,7 @@ const Home: NextPage = () => {
   const esyalarDizisi = Array.from({ length: idSira }, (_, i) => i).reverse();
 
   return (
-    <div className="flex items-center flex-col grow pt-10 px-5 bg-[#F8FAFC] min-h-screen text-[#1E293B]">
+    <div className="flex items-center flex-col grow pt-10 px-5 bg-white min-h-screen text-[#1E293B]">
       <div className="text-center mb-10">
         <h1 className="text-6xl font-black mb-2 text-[#0F172A] tracking-tighter">LostChain</h1>
         <p className="text-lg font-medium text-[#64748B] tracking-wide">
@@ -56,7 +56,8 @@ const Home: NextPage = () => {
         </p>
       </div>
 
-      <div className="card w-full max-w-2xl bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-[#E2E8F0] rounded-[2rem] mb-16">
+      {/* --- FORM ALANI (Hafif Gri Arka Planlı Kart) --- */}
+      <div className="card w-full max-w-2xl bg-[#F8FAFC] shadow-sm border border-[#E2E8F0] rounded-[2rem] mb-16">
         <div className="card-body p-8">
           <h2 className="card-title text-xl font-bold mb-4 flex items-center gap-2 text-[#334155]">
             <PlusIcon className="h-5 w-5 text-blue-500" /> Bir İlan Oluşturun
@@ -65,13 +66,13 @@ const Home: NextPage = () => {
             <input
               type="text"
               placeholder="Eşyanın Adı nedir?"
-              className="input input-bordered bg-[#F1F5F9] border-none focus:ring-2 focus:ring-blue-400 placeholder-[#94A3B8]"
+              className="input input-bordered bg-white border-[#E2E8F0] focus:ring-2 focus:ring-blue-400 placeholder-[#94A3B8]"
               value={esyaIsmi}
               onChange={e => setEsyaIsmi(e.target.value)}
             />
             <textarea
               placeholder="Kısa bir açıklama ekleyin..."
-              className="textarea textarea-bordered bg-[#F1F5F9] border-none focus:ring-2 focus:ring-blue-400 h-24 placeholder-[#94A3B8]"
+              className="textarea textarea-bordered bg-white border-[#E2E8F0] focus:ring-2 focus:ring-blue-400 h-24 placeholder-[#94A3B8]"
               value={aciklama}
               onChange={e => setAciklama(e.target.value)}
             />
@@ -100,18 +101,18 @@ const Home: NextPage = () => {
             </div>
 
             {bulunduMu && (
-              <div className="flex flex-col gap-3 p-5 bg-blue-50/50 rounded-2xl border border-blue-100 animate-in slide-in-from-top-4 duration-300">
+              <div className="flex flex-col gap-3 p-5 bg-white rounded-2xl border border-blue-100 animate-in slide-in-from-top-4 duration-300">
                 <input
                   type="text"
-                  placeholder="Doğrulama Sorusu (Örn: Rengi neydi?)"
-                  className="input input-sm bg-white border-blue-200"
+                  placeholder="Doğrulama Sorusu"
+                  className="input input-sm bg-[#F8FAFC] border-blue-100"
                   value={dogrulamaSorusu}
                   onChange={e => setDogrulamaSorusu(e.target.value)}
                 />
                 <input
                   type="text"
-                  placeholder="Gizli Konum (Nereye bıraktınız?)"
-                  className="input input-sm bg-white border-blue-200"
+                  placeholder="Gizli Konum"
+                  className="input input-sm bg-[#F8FAFC] border-blue-100"
                   value={gizliKonum}
                   onChange={e => setGizliKonum(e.target.value)}
                 />
@@ -128,6 +129,7 @@ const Home: NextPage = () => {
         </div>
       </div>
 
+      {/* --- İLANLAR --- */}
       <div className="w-full max-w-7xl pb-20">
         <div className="flex items-center gap-4 mb-10 px-4">
           <div className="h-[1px] grow bg-[#E2E8F0]" />
@@ -157,7 +159,7 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
   });
   const { writeContractAsync: writeYourContractAsync } = useScaffoldWriteContract("YourContract");
 
-  if (!esya) return <div className="h-80 bg-white rounded-[2rem] animate-pulse border border-gray-100" />;
+  if (!esya) return <div className="h-80 bg-[#F8FAFC] rounded-[2rem] animate-pulse" />;
   const [, isim, aciklama, bildiren, durum, , , gizliKonum, dogrulamaSorusu, onayliKisi] = esya;
 
   const isSahibi = connectedAddress?.toLowerCase() === bildiren.toLowerCase();
@@ -167,7 +169,7 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
 
   return (
     <div
-      className={`group bg-white rounded-[2rem] border border-[#E2E8F0] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden ${
+      className={`group bg-[#F8FAFC] rounded-[2rem] border border-[#E2E8F0] hover:bg-white hover:shadow-xl transition-all duration-300 overflow-hidden ${
         Number(durum) === 2 ? "grayscale opacity-60" : ""
       }`}
     >
@@ -187,7 +189,7 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
         <p className="text-sm text-[#64748B] mb-6 line-clamp-2">&quot;{aciklama}&quot;</p>
 
         {isBulundu && !isSahibi && !isOnayli && (
-          <div className="bg-[#F8FAFC] p-5 rounded-2xl border border-gray-100 mb-6">
+          <div className="bg-white p-5 rounded-2xl border border-gray-100 mb-6">
             <p className="text-[11px] font-black text-blue-600 uppercase mb-3 flex items-center gap-1">
               <PaperAirplaneIcon className="h-3 w-3" /> Sahiplik Talebi
             </p>
@@ -197,14 +199,14 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
             <input
               type="text"
               placeholder="Cevabınız"
-              className="input input-xs w-full mb-2 bg-white"
+              className="input input-xs w-full mb-2 bg-[#F8FAFC]"
               value={cevap}
               onChange={e => setCevap(e.target.value)}
             />
             <input
               type="text"
               placeholder="İletişim Adresiniz"
-              className="input input-xs w-full mb-3 bg-white"
+              className="input input-xs w-full mb-3 bg-[#F8FAFC]"
               value={iletisim}
               onChange={e => setIletisim(e.target.value)}
             />
@@ -220,11 +222,11 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
         <div className="space-y-4">
           <div
             className={`p-4 rounded-2xl flex items-center gap-4 transition-colors ${
-              isOnayli || isSahibi ? "bg-green-50 border border-green-100" : "bg-gray-50 border border-gray-100"
+              isOnayli || isSahibi ? "bg-green-50 border border-green-100" : "bg-white border border-gray-100"
             }`}
           >
             <div
-              className={`p-2 rounded-lg ${isOnayli || isSahibi ? "bg-white text-green-500" : "bg-white text-gray-300"}`}
+              className={`p-2 rounded-lg ${isOnayli || isSahibi ? "bg-white text-green-500" : "bg-[#F8FAFC] text-gray-300"}`}
             >
               {isOnayli || isSahibi ? <LockOpenIcon className="h-5 w-5" /> : <LockClosedIcon className="h-5 w-5" />}
             </div>

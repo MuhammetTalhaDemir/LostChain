@@ -16,7 +16,7 @@ export const Header = () => {
   });
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-white border-b border-gray-100 min-h-0 shrink-0 justify-between z-20 px-4 py-3">
+    <div className="sticky lg:static top-0 navbar bg-[#F8FAFC] border-b border-gray-200 min-h-0 shrink-0 justify-between z-20 px-4 py-3">
       <div className="navbar-start w-auto">
         <Link href="/" passHref className="flex items-center gap-2 ml-2 shrink-0">
           <div className="flex flex-col">
