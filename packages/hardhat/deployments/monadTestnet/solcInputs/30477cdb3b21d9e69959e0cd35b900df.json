@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/LostChain.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.30;\n\ncontract LostChain {\n    enum Status { Kayip, Bulundu, TeslimEdildi }\n\n    struct Esya {\n        uint256 id;\n        string isim;\n        string aciklama;\n        address bildiren;\n        Status durum;\n        address bulanKisi;\n        string iletisimNotu; \n        string gizliKonum;   // Sadece onaylı kişi görecek\n        string dogrulamaSorusu; // Sahibi tarafından sorulan soru\n        address onayliKisi;  // Konumu görme yetkisi olan kişi\n    }\n\n    mapping(uint256 => Esya) public esyalar;\n    uint256 public sonrakiId;\n\n    // Eşya eklerken doğrulama sorusu da ekleniyor\n    function esyaEkle(\n        string memory _isim, \n        string memory _aciklama, \n        bool _bulunduMu, \n        string memory _soru, \n        string memory _konum // <--- 5. parametre eklendi mi?\n    ) public {\n        esyalar[sonrakiId] = Esya({\n            id: sonrakiId,\n            isim: _isim,\n            aciklama: _aciklama,\n            bildiren: msg.sender,\n            durum: _bulunduMu ? Status.Bulundu : Status.Kayip,\n            bulanKisi: _bulunduMu ? msg.sender : address(0), // Bulan kişi ilanı açansa kendini kaydeder\n            iletisimNotu: \"\",\n            gizliKonum: _konum,\n            dogrulamaSorusu: _soru,\n            onayliKisi: address(0)\n        });\n        sonrakiId++;\n    }\n\n    // Birisi eşyayı bulduğunu iddia ederse\n    function buldugunuBildir(uint256 _id, string memory _iletisim, string memory _konum) public {\n        require(esyalar[_id].durum == Status.Kayip, \"Bu esya zaten bulundu.\");\n        esyalar[_id].bulanKisi = msg.sender;\n        esyalar[_id].iletisimNotu = _iletisim;\n        esyalar[_id].gizliKonum = _konum;\n        esyalar[_id].durum = Status.Bulundu;\n    }\n\n    // İlan sahibi, bulan kişiyi doğrularsa yetki verir\n    function kisiOnayla(uint256 _id, address _onaylanacakKisi) public {\n        require(msg.sender == esyalar[_id].bildiren, \"Sadece sahibi onaylayabilir.\");\n        esyalar[_id].onayliKisi = _onaylanacakKisi;\n    }\n\n    function teslimEdildiIsaretle(uint256 _id) public {\n        require(msg.sender == esyalar[_id].bildiren, \"Sadece sahibi kapatabilir.\");\n        esyalar[_id].durum = Status.TeslimEdildi;\n    }\n\n            // ... mevcut struct ve enumlar ...\n\n    function talepOlustur(uint256 _id, string memory _cevap, string memory _iletisim) public {\n        require(esyalar[_id].durum == Status.Bulundu, \"Bu esya icin talep olusturulamaz.\");\n        // Biz burada 'bulanKisi' ve 'iletisimNotu' alanlarini \n        // gecici olarak talep eden kisinin bilgileriyle guncelliyoruz ki sahibi gorsun.\n        esyalar[_id].bulanKisi = msg.sender;\n        esyalar[_id].iletisimNotu = string(abi.encodePacked(\"CEVAP: \", _cevap, \" | ILETISIM: \", _iletisim));\n    }\n}"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

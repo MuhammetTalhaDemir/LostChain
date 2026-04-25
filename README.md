@@ -1,83 +1,65 @@
-# 🏗 Scaffold-ETH 2
+# 🏗 LostChain | Monad Blitz Kayseri
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+**LostChain**, Erciyes Üniversitesi kampüs ortamı için tasarlanmış, blockchain tabanlı bir kayıp-buluntu eşya portalıdır. Bu proje, **Monad Blitz Kayseri Hackathon** kapsamında sınırlı bir sürede geliştirilmiş bir **Teknik Prototiptir**.
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+---
 
-> [!NOTE]
-> 🤖 Scaffold-ETH 2 is AI-ready! It has everything agents need to build on Ethereum. Check `.agents/`, `.claude/`, `.opencode` or `.cursor/` for more info.
+## 🎯 Problem ve Çözüm
 
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
+Üniversite kampüslerinde kayıp eşya ilanları genellikle anlık mesajlaşma grupları (WhatsApp, Telegram vb.) üzerinden paylaşılmaktadır. Ancak bu yöntem iki büyük sorunu beraberinde getirir:
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+1.  **Bilgi Kirliliği ve Kaybolma:** İlanlar, yoğun mesaj trafiği arasında hızla yukarıda kalarak görünürlüğünü yitirir ve ihtiyaç anında aranıp bulunması imkansız hale gelir.
+2.  **Güvenlik ve Doğrulama:** Eşyayı bulan kişi ile gerçek sahibi arasında güvenli bir doğrulama mekanizması yoktur.
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+**LostChain**, bu sorunları blockchain teknolojisiyle çözer:
+* **Kalıcı ve Düzenli Liste:** İlanlar mesaj trafiğine kapılmadan, akıllı kontrat üzerinde kalıcı ve kategorize edilmiş bir şekilde listelenir.
+* **Akıllı Doğrulama:** Eşyayı bulan kişi, belirlediği "Doğrulama Sorusu" ile eşyayı sadece doğru cevabı veren kişiye (sahiplik kanıtı) teslim eder.
 
-## Requirements
+## 🌟 Temel Özellikler
 
-Before you begin, you need to install the following tools:
+* **Hybrid Privacy:** Bulunan eşyaların konumu, eşya sahibi onaylanana kadar blockchain üzerinde gizli tutulur.
+* **Decentralized Verification:** Sahiplik kanıtı için blockchain tabanlı soru-cevap mekanizması kullanılır.
+* **Monad Testnet Integration:** Yüksek performanslı Monad Testnet üzerinde düşük maliyetli ve hızlı işlem yapma imkanı.
+* **Direct Contact:** Kayıp eşya sahipleri için merkeziyetsiz bir iletişim köprüsü.
 
-- [Node (>= v20.18.3)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+## 🛠 Teknik Stack
 
-## Quickstart
+* **Smart Contract:** Solidity (Monad Testnet)
+* **Frontend:** Next.js, Tailwind CSS
+* **Blockchain Tooling:** Scaffold-ETH 2, Wagmi, RainbowKit
+* **Deployment:** Vercel
 
-To get started with Scaffold-ETH 2, follow the steps below:
+## 🔗 Canlı Uygulama
 
-1. Install dependencies if it was skipped in CLI:
+https://lost-chain-nextjs.vercel.app
 
-```
-cd my-dapp-example
-yarn install
-```
+## 🚀 Başlangıç
 
-2. Run a local network in the first terminal:
+Projeyi yerelde çalıştırmak için:
 
-```
-yarn chain
-```
+1.  **Repo'yu klonlayın:**
+    ```bash
+    git clone https://github.com/MuhammetTalhaDemir/LostChain.git
+    cd LostChain
+    ```
+2.  **Bağımlılıkları yükleyin:**
+    ```bash
+    yarn install
+    ```
+3.  **Uygulamayı başlatın:**
+    ```bash
+    yarn start
+    ```
 
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `packages/hardhat/hardhat.config.ts`.
+## 📝 Akıllı Kontrat
+Kontrat ismi: `LostChain`  
+Ağ: `Monad Testnet`  
+Doğrulanmış kodları Monad Explorer üzerinden inceleyebilirsiniz.
 
-3. On a second terminal, deploy the test contract:
+---
 
-```
-yarn deploy
-```
+## 🏛️ Proje Durumu ve Final Notu
 
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
+Bu proje, **Blitz Kayseri** Hackathon finalinin ardından görsel ve teknik iyileştirmeleri (UI/UX polish, hydration fixes, metadata updates) içeren son bir güncelleme ile **nihai haline** getirilmiştir. 
 
-4. On a third terminal, start your NextJS app:
-
-```
-yarn start
-```
-
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
-
-Run smart contract test with `yarn hardhat:test`
-
-- Edit your smart contracts in `packages/hardhat/contracts`
-- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/hardhat/deploy`
-
-
-## Documentation
-
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
-
-To know more about its features, check out our [website](https://scaffoldeth.io).
-
-## Contributing to Scaffold-ETH 2
-
-We welcome contributions to Scaffold-ETH 2!
-
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+**LostChain**, Monad ekosistemindeki ilk geliştirme deneyimlerimin bir parçası, hackathon heyecanının bir hatırası ve teknik bir referans noktası olarak GitHub üzerinde bu haliyle kalıcı olarak paylaşılmıştır.

@@ -23,10 +23,10 @@ const Home: NextPage = () => {
   const [iletisimBilgisi, setIletisimBilgisi] = useState(""); // Yeni state
   const [bulunduMu, setBulunduMu] = useState(false);
 
-  const { writeContractAsync: writeYourContractAsync } = useScaffoldWriteContract("YourContract");
+  const { writeContractAsync: writeLostChainAsync } = useScaffoldWriteContract("LostChain");
 
   const { data: sonrakiId } = useScaffoldReadContract({
-    contractName: "YourContract",
+    contractName: "LostChain",
     functionName: "sonrakiId",
   });
 
@@ -37,7 +37,7 @@ const Home: NextPage = () => {
         ? `${aciklama} (İletişim: ${iletisimBilgisi})` 
         : aciklama;
 
-      await writeYourContractAsync({
+      await writeLostChainAsync({
         functionName: "esyaEkle",
         args: [esyaIsmi, finalAciklama, bulunduMu, dogrulamaSorusu, gizliKonum],
       });
@@ -56,6 +56,47 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex items-center flex-col grow pt-10 px-5 bg-white min-h-screen text-[#1E293B]">
+      <style jsx global>{`
+        .navbar-end span, 
+        .navbar-end div {
+          color: #1e293b !important;
+        }
+
+        /* Cüzdan Butonu (Beyaz zemin, siyah yazı) */
+        [data-testid="rk-account-button"] {
+          background-color: #ffffff !important;
+          color: #1e293b !important;
+          border: 1px solid #e2e8f0 !important;
+          border-radius: 12px !important;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+        }
+
+        [data-testid="rk-account-button"] span {
+          color: #1e293b !important;
+        }
+
+        /* AÇILIR MENÜ (Lacivert kutuyu beyaza çevirir) */
+        div[role="dialog"] > div > div {
+          background-color: #ffffff !important;
+        }
+
+        /* Menü içindeki metinler ve ikonlar */
+        div[role="dialog"] span,
+        div[role="dialog"] div,
+        div[role="dialog"] button {
+          color: #1e293b !important;
+        }
+
+        /* Hover (üzerine gelince) rengi */
+        div[role="dialog"] button:hover {
+          background-color: #f8fafc !important;
+        }
+
+        /* Kapatma ikonu ve diğer svg ikonlar */
+        div[role="dialog"] svg {
+          fill: #1e293b !important;
+        }
+      `}</style>
       <div className="text-center mb-10">
         <h1 className="text-6xl font-black mb-2 text-[#0F172A] tracking-tighter">LostChain</h1>
         <p className="text-lg font-medium text-[#64748B] tracking-wide">
@@ -120,23 +161,27 @@ const Home: NextPage = () => {
               </div>
             )}
 
-            {/* SADECE EŞYA BULDUM SEÇİLİRSE */}
+            {/* SADECE EŞYA BULDUM SEÇİLİRSE (YEŞİL TEMA) */}
             {bulunduMu && (
-              <div className="flex flex-col gap-3 p-5 bg-white rounded-2xl border border-blue-100 animate-in slide-in-from-top-4 duration-300">
+              <div className="flex flex-col gap-3 p-5 bg-green-50/30 rounded-2xl border border-green-100 animate-in slide-in-from-top-4 duration-300">
+                <p className="text-[10px] font-bold text-green-600 uppercase tracking-widest text-center">Doğrulama Bilgileri</p>
                 <input
                   type="text"
-                  placeholder="Doğrulama Sorusu"
-                  className="input input-sm bg-[#F8FAFC] border-blue-100"
+                  placeholder="Doğrulama Sorusu (Örn: Ekran kilidinde ne yazıyor?)"
+                  className="input input-sm bg-white border-green-200 focus:ring-1 focus:ring-green-400"
                   value={dogrulamaSorusu}
                   onChange={e => setDogrulamaSorusu(e.target.value)}
                 />
                 <input
                   type="text"
-                  placeholder="Gizli Konum"
-                  className="input input-sm bg-[#F8FAFC] border-blue-100"
+                  placeholder="Gizli Konum (Örn: A Blok Kantin Masası altı)"
+                  className="input input-sm bg-white border-green-200 focus:ring-1 focus:ring-green-400"
                   value={gizliKonum}
                   onChange={e => setGizliKonum(e.target.value)}
                 />
+                <p className="text-[10px] opacity-60 italic text-green-500 text-center">
+                  * Bu bilgiler sadece doğru kişiye teslimat için kullanılacaktır.
+                </p>
               </div>
             )}
 
@@ -173,11 +218,11 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
   const [cevap, setCevap] = useState("");
   const [iletisim, setIletisim] = useState("");
   const { data: esya } = useScaffoldReadContract({
-    contractName: "YourContract",
+    contractName: "LostChain",
     functionName: "esyalar",
     args: [BigInt(id)],
   });
-  const { writeContractAsync: writeYourContractAsync } = useScaffoldWriteContract("YourContract");
+  const { writeContractAsync: writeLostChainAsync } = useScaffoldWriteContract("LostChain");
 
   if (!esya) return <div className="h-80 bg-[#F8FAFC] rounded-[2rem] animate-pulse" />;
   const [, isim, aciklama, bildiren, durum, , , gizliKonum, dogrulamaSorusu, onayliKisi] = esya;
@@ -232,7 +277,7 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
             />
             <button
               className="btn btn-xs w-full bg-blue-600 text-white border-none hover:bg-blue-700 font-bold"
-              onClick={() => writeYourContractAsync({ functionName: "talepOlustur", args: [BigInt(id), cevap, iletisim] })}
+              onClick={() => writeLostChainAsync({ functionName: "talepOlustur", args: [BigInt(id), cevap, iletisim] })}
             >
               Talep Gönder
             </button>
@@ -266,7 +311,7 @@ const EsyaKarti = ({ id, connectedAddress }: { id: number; connectedAddress?: st
           {isSahibi && Number(durum) !== 2 && (
             <button
               className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-lg"
-              onClick={() => writeYourContractAsync({ functionName: "teslimEdildiIsaretle", args: [BigInt(id)] })}
+              onClick={() => writeLostChainAsync({ functionName: "teslimEdildiIsaretle", args: [BigInt(id)] })}
             >
               <CheckIcon className="h-4 w-4" /> Süreci Kapat
             </button>

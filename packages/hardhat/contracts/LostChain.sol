@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-contract YourContract {
+contract LostChain {
     enum Status { Kayip, Bulundu, TeslimEdildi }
 
     struct Esya {

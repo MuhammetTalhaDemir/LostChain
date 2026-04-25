@@ -6,6 +6,200 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 const deployedContracts = {
   10143: {
+    LostChain: {
+      address: "0x583E3d8589437Ef6Ed9845494A5F6dB31062dA83",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_id",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "_iletisim",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_konum",
+              type: "string",
+            },
+          ],
+          name: "buldugunuBildir",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_isim",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_aciklama",
+              type: "string",
+            },
+            {
+              internalType: "bool",
+              name: "_bulunduMu",
+              type: "bool",
+            },
+            {
+              internalType: "string",
+              name: "_soru",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_konum",
+              type: "string",
+            },
+          ],
+          name: "esyaEkle",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "esyalar",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "isim",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "aciklama",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "bildiren",
+              type: "address",
+            },
+            {
+              internalType: "enum LostChain.Status",
+              name: "durum",
+              type: "uint8",
+            },
+            {
+              internalType: "address",
+              name: "bulanKisi",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "iletisimNotu",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "gizliKonum",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "dogrulamaSorusu",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "onayliKisi",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_id",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "_onaylanacakKisi",
+              type: "address",
+            },
+          ],
+          name: "kisiOnayla",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "sonrakiId",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_id",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "_cevap",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_iletisim",
+              type: "string",
+            },
+          ],
+          name: "talepOlustur",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_id",
+              type: "uint256",
+            },
+          ],
+          name: "teslimEdildiIsaretle",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 27736312,
+    },
     YourContract: {
       address: "0x2084bF37Bf6fBE542D98E5C27cC2537343c50A2C",
       abi: [
